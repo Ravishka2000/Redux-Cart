@@ -4,11 +4,12 @@ import Card from 'react-bootstrap/Card';
 import { useDispatch, useSelector } from "react-redux";
 import { add } from "../store/cartSlice";
 import { getProducts } from "../store/productSlice";
+import Spinner from 'react-bootstrap/Spinner';
 
 const Product = () => {
     
     const dispatch = useDispatch();
-    const {data: products} = useSelector(state => state.products);
+    const {data: products, status} = useSelector(state => state.products);
 
     useEffect(() => {
         dispatch(getProducts())
@@ -16,6 +17,14 @@ const Product = () => {
 
     const addToCart = (product) => {
         dispatch(add(product));
+    }
+
+    if (status === 'loading'){
+        return <Spinner animation="grow" />;
+    }
+
+    if (status === 'error'){
+        return <p>Something went wrong!</p>;
     }
 
     const cards = products.map(product => (
